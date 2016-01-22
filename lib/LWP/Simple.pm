@@ -9,6 +9,22 @@ use URI::Escape;
 unit class LWP::Simple:auth<perl6>:ver<0.107>;
 constant $VERSION = ::?CLASS.^ver;
 
+
+class X::LWP::Simple::Response is Exception {
+
+    has Str $.status is rw;
+    has Hash $.headers is rw;
+    has Str $.content is rw;
+
+    method Str() {
+        return ~self.status;
+    }
+
+    method gist() {
+        return self.Str;
+    }
+}
+
 enum RequestType <GET POST PUT HEAD DELETE>;
 
 has Str $.default_encoding = 'utf-8';
@@ -88,6 +104,14 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
         self.make_request($rt, $hostname, $port, $path, %headers, $content, :$ssl);
 
     given $status {
+
+        when / <[4..5]> <[0..9]> <[0..9]> / {
+            X::LWP::Simple::Response.new(
+                status => $status,
+                headers => $resp_headers,
+                content => self!decode-response( :$resp_headers, :$resp_content )
+            ).throw;
+        }
 
         when / 30 <[12]> / {
             my $new_url = $resp_headers.pairs.first( *.key.lc eq 'location' ).value;
