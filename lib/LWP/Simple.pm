@@ -87,17 +87,10 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
     my ($status, $resp_headers, $resp_content) =
         self.make_request($rt, $hostname, $port, $path, %headers, $content, :$ssl);
 
-    # HTML header names can be mixed case. To find the desired names, transform
-    # them into lowercase.
-    my %resp_header_lowercase;
-    for $resp_headers.keys -> $header_name {
-        %resp_header_lowercase{$header_name.lc} = $resp_headers{$header_name};
-    }
-
     given $status {
 
         when / 30 <[12]> / {
-            my $new_url = %resp_header_lowercase<location>;
+            my $new_url = $resp_headers.pairs.first( *.key.lc eq 'location' ).value;
             if ! $new_url {
                 die "Redirect $status without a new URL?";
             }
@@ -113,37 +106,11 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
         }
 
         when / 20 <[0..9]> / {
-
-            # should be fancier about charset decoding application - someday
-            if ($.force_encoding) {
-                return $resp_content.decode($.force_encoding);
+            if ( $rt == RequestType::HEAD ) {
+                return $resp_headers;
+            } else {
+                return self!decode-response( :$resp_headers, :$resp_content );
             }
-            elsif (not $.force_no_encode) && %resp_header_lowercase<content-type> &&
-                %resp_header_lowercase<content-type> ~~
-                    /   $<media-type>=[<-[/;]>+]
-                        [ <[/]> $<media-subtype>=[<-[;]>+] ]? /  &&
-                (   $<media-type> eq 'text' ||
-                    (   $<media-type> eq 'application' &&
-                        $<media-subtype> ~~ /[ ecma | java ]script | json/
-                    )
-                )
-            {
-                my $charset =
-                    (%resp_header_lowercase<content-type> ~~ /charset\=(<-[;]>*)/)[0];
-
-                $charset = $charset ?? $charset.Str !!
-                    self ?? $.default_encoding !! $.class_default_encoding;
-
-                if ( $rt == RequestType::HEAD ) {
-                    return $resp_headers;
-                } else {
-                    return $resp_content.decode($charset);
-                }
-            }
-            else {
-                return $resp_content;
-            }
-
         }
 
         # Response failed
@@ -152,6 +119,28 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
         }
     }
 
+}
+
+method !decode-response( :$resp_headers, :$resp_content ) {
+    my %resp_header_lowercase = $resp_headers.kv.map( -> $k, $v { $k.lc => $v });
+    # should be fancier about charset decoding application - someday
+    if ($.force_encoding) {
+        return $resp_content.decode($.force_encoding);
+    }
+    elsif (not $.force_no_encode) && self!is-text(:%resp_header_lowercase) {
+        my $charset = (%resp_header_lowercase<content-type> ~~ /charset\=(<-[;]>*)/)[0];
+        $charset = $charset ?? $charset.Str !!  self ?? $.default_encoding !! $.class_default_encoding;
+        return $resp_content.decode($charset);
+    }
+    else {
+        return $resp_content;
+    }
+}
+
+method !is-text(:%resp_header_lowercase --> Bool) {
+    so ( %resp_header_lowercase<content-type> &&
+      %resp_header_lowercase<content-type> ~~ /   $<media-type>=[<-[/;]>+] [ <[/]> $<media-subtype>=[<-[;]>+] ]? /  &&
+      (   $<media-type> eq 'text' || (   $<media-type> eq 'application' && $<media-subtype> ~~ /[ ecma | java ]script | json/)) );
 }
 
 method parse_chunks(Blob $b is rw, $sock) {
