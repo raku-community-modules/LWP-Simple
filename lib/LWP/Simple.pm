@@ -5,7 +5,6 @@ use v6;
 use MIME::Base64;
 use URI;
 use URI::Escape;
-try require IO::Socket::SSL;
 
 unit class LWP::Simple:auth<cosimo>:ver<0.090>;
 
@@ -49,6 +48,7 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
     die "400 URL must be absolute <URL:$url>\n" unless $url ~~ m/^https*\:\/\//;
     my $ssl;
     if $url ~~ m/^https\:\/\// {
+        try require IO::Socket::SSL;
         die "501 Protocol scheme 'https' is only supported if IO::Socket::SSL is installed <URL:$url>\n" if ::('IO::Socket::SSL') ~~ Failure;
         $ssl = True;
     }
