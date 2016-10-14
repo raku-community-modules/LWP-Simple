@@ -2,6 +2,14 @@
 
 use v6.c;
 
+BEGIN {
+    try require IO::Socket::SSL;
+    if ::('IO::Socket::SSL') ~~ Failure {
+        print("1..0 # Skip: IO::Socket::SSL not available\n");
+        exit 0;
+    }
+}
+
 use Test;
 use LWP::Simple;
 
