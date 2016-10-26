@@ -1,4 +1,5 @@
 {
+    "perl"        : "6.*",
     "name"        : "LWP::Simple",
     "version"     : "0.090",
     "description" : "LWP::Simple quick & dirty implementation for Rakudo Perl 6",
