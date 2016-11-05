@@ -5,6 +5,12 @@ use LWP::Simple;
 
 plan 1;
 
+if %*ENV<NO_NETWORK_TESTING> {
+    diag "NO_NETWORK_TESTING was set";
+    skip-rest("NO_NETWORK_TESTING was set");
+    exit;
+}
+
 # don't use rakudo.org anymore, it has proven to be rather unreliable :(
 my $logo = LWP::Simple.get('http://www.perl6.org/camelia-logo.png');
 

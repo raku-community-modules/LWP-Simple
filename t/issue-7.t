@@ -8,10 +8,17 @@ BEGIN {
         print("1..0 # Skip: IO::Socket::SSL not available\n");
         exit 0;
     }
+
 }
 
 use Test;
 use LWP::Simple;
+
+if %*ENV<NO_NETWORK_TESTING> {
+    diag "NO_NETWORK_TESTING was set";
+    skip-rest("NO_NETWORK_TESTING was set");
+    exit;
+}
 
 lives-ok {
     LWP::Simple.get("http://github.com/");
