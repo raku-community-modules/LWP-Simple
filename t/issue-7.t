@@ -1,18 +1,16 @@
 #!/usr/bin/env perl6
 
 use v6.c;
-
-BEGIN {
-    try require IO::Socket::SSL;
-    if ::('IO::Socket::SSL') ~~ Failure {
-        print("1..0 # Skip: IO::Socket::SSL not available\n");
-        exit 0;
-    }
-
-}
+use LWP::Simple;
 
 use Test;
-use LWP::Simple;
+plan 1;
+
+try require IO::Socket::SSL;
+if ::('IO::Socket::SSL') ~~ Failure {
+    skip-rest("IO::Socket::SSL not available");
+    exit 0;
+}
 
 if %*ENV<NO_NETWORK_TESTING> {
     diag "NO_NETWORK_TESTING was set";
