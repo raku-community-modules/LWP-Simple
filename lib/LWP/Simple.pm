@@ -47,7 +47,9 @@ method put (Str $url, %headers = {}, Any $content?) {
 method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
 
     return unless $url;
-    die "400 URL must be absolute <URL:$url>\n" unless $url ~~ m/^https*\:\/\//;
+    die "400 URL must be absolute <URL:$url>\n"
+        unless $url.starts-with('https://') or $url.starts-with('http://');
+
     my $ssl;
     if $url ~~ m/^https\:\/\// {
         try require IO::Socket::SSL;
