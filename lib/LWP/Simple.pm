@@ -50,12 +50,13 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
     die "400 URL must be absolute <URL:$url>\n"
         unless $url.starts-with('https://') or $url.starts-with('http://');
 
-    my $ssl;
-    if $url ~~ m/^https\:\/\// {
-        try require IO::Socket::SSL;
-        die "501 Protocol scheme 'https' is only supported if IO::Socket::SSL is installed <URL:$url>\n" if ::('IO::Socket::SSL') ~~ Failure;
-        $ssl = True;
-    }
+    # The `require` must not be inside a block; because we need its symbols
+    # later in the code and it exports them lexically.
+    my $ssl = $url.starts-with('https://') and (
+        (try require IO::Socket::SSL) !=== Nil
+        or die "501 Protocol scheme 'https' is only supported if "
+            ~ "IO::Socket::SSL is installed <URL:$url>\n"
+    );
 
     my ($scheme, $hostname, $port, $path, $auth) = self.parse_url($url);
 
