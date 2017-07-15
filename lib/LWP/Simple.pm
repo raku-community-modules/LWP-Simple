@@ -29,7 +29,7 @@ method base64encode ($user, $pass) {
 }
 
 method get (Str $url, %headers = {}) {
-    self.request_shell(RequestType::GET, $url)
+    self.request_shell(RequestType::GET, $url, %headers)
 }
 
 method delete (Str $url, %headers = {}) {
