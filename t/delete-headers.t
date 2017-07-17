@@ -20,5 +20,5 @@ my %headers =
 my $html = LWP::Simple.delete('http://httpbin.org/delete', %headers);
 my %json = from-json $html;
 
-is %json<headers><User-Agent>, "Perl 6...", "User agent header is sent by GET";
-is %json<headers><Accept>, "application/json", "Accept header is sent by GET";
+is %json<headers><User-Agent>, "Perl 6...", "User agent header is sent by DELETE";
+is %json<headers><Accept>, "application/json", "Accept header is sent by DELETE";
