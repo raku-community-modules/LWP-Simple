@@ -41,7 +41,7 @@ method post (Str $url, %headers = {}, Any $content?) {
 }
 
 method put (Str $url, %headers = {}, Any $content?) {
-    self.request_shell(RequestType::DELETE, $url, %headers, $content)
+    self.request_shell(RequestType::PUT, $url, %headers, $content)
 }
 
 method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
