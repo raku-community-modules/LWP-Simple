@@ -6,9 +6,9 @@ use MIME::Base64;
 use URI;
 use URI::Escape;
 
-unit class LWP::Simple:auth<cosimo>:ver<0.094>;
+unit class LWP::Simple:auth<cosimo>:ver<0.095>;
 
-our $VERSION = '0.094';
+our $VERSION = '0.095';
 
 enum RequestType <GET POST PUT HEAD DELETE>;
 
@@ -88,7 +88,7 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
 
         when / 30 <[12]> / {
             my %resp_headers = $resp_headers.hash;
-            my $new_url = %resp_headers<Location>;
+            my $new_url = %resp_headers<location>;
             if ! $new_url {
                 die "Redirect $status without a new URL?";
             }
