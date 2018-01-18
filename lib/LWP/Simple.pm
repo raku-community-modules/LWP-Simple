@@ -6,9 +6,9 @@ use MIME::Base64;
 use URI;
 use URI::Escape;
 
-unit class LWP::Simple:auth<cosimo>:ver<0.094>;
+unit class LWP::Simple:auth<cosimo>:ver<0.096>;
 
-our $VERSION = '0.094';
+our $VERSION = '0.096';
 
 enum RequestType <GET POST PUT HEAD DELETE>;
 
@@ -324,7 +324,8 @@ method parse_response (Blob $resp) {
 
         for @header_lines {
             my ($name, $value) = .split(': ');
-            %header{$name} = $value;
+            # HTML header names are case insensitive. Change them to Title-Case.
+            %header{$name.tc} = $value;
         }
         return $status_line, %header.item, $resp.subbuf($header_end_pos +4).item;
     }
