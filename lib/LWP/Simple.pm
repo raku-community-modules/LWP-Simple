@@ -6,9 +6,9 @@ use MIME::Base64;
 use URI;
 use URI::Escape;
 
-unit class LWP::Simple:auth<cosimo>:ver<0.094>;
+unit class LWP::Simple:auth<cosimo>:ver<0.095>;
 
-our $VERSION = '0.094';
+our $VERSION = '0.095';
 
 enum RequestType <GET POST PUT HEAD DELETE>;
 
@@ -88,7 +88,7 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
 
         when / 30 <[12]> / {
             my %resp_headers = $resp_headers.hash;
-            my $new_url = %resp_headers<Location>;
+            my $new_url = %resp_headers<location>;
             if ! $new_url {
                 die "Redirect $status without a new URL?";
             }
@@ -109,8 +109,8 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
             if ($.force_encoding) {
                 return $resp_content.decode($.force_encoding);
             }
-            elsif (not $.force_no_encode) && $resp_headers<Content-Type> &&
-                $resp_headers<Content-Type> ~~
+            elsif (not $.force_no_encode) && $resp_headers<content-type> &&
+                $resp_headers<content-type> ~~
                     /   $<media-type>=[<-[/;]>+]
                         [ <[/]> $<media-subtype>=[<-[;]>+] ]? /  &&
                 (   $<media-type> eq 'text' ||
@@ -120,7 +120,7 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
                 )
             {
                 my $charset =
-                    ($resp_headers<Content-Type> ~~ /charset\=(<-[;]>*)/)[0];
+                    ($resp_headers<content-type> ~~ /charset\=(<-[;]>*)/)[0];
                 $charset = $charset ?? $charset.Str !!
                     self ?? $.default_encoding !! $.class_default_encoding;
                 return $resp_content.decode($charset);
@@ -254,7 +254,7 @@ method make_request (
     my ($status, $resp_headers, $resp_content) = self.parse_response($resp);
 
 
-    if (($resp_headers<Transfer-Encoding> || '') eq 'chunked') {
+    if (($resp_headers<transfer-encoding> || '') eq 'chunked') {
         my Bool $is_last_chunk;
         my Blob $resp_content_chunk;
 
@@ -269,11 +269,11 @@ method make_request (
             $resp_content ~= $resp_content_chunk;
         }
     }
-    elsif ( $resp_headers<Content-Length>   &&
-            $resp_content.bytes < $resp_headers<Content-Length>
+    elsif ( $resp_headers<content-length>   &&
+            $resp_content.bytes < $resp_headers<content-length>
     ) {
         $resp_content ~= $sock.read(
-            $resp_headers<Content-Length> - $resp_content.bytes
+            $resp_headers<content-length> - $resp_content.bytes
         );
     }
     else { # a bit hacky for now but should be ok
@@ -324,7 +324,8 @@ method parse_response (Blob $resp) {
 
         for @header_lines {
             my ($name, $value) = .split(': ');
-            %header{$name} = $value;
+            # HTML deader names are case insensitive. Therefor store all lowercase.
+            %header{$name.lc} = $value;
         }
         return $status_line, %header.item, $resp.subbuf($header_end_pos +4).item;
     }
