@@ -10,5 +10,5 @@
     },
     "author"       : "Cosimo Streppone",
     "authority"    : "perl6",
-    "source-url"   : "git://github.com/perl6/perl6-lwp-simple.git"
+    "source-url"   : "https://github.com/perl6/perl6-lwp-simple.git"
 }
