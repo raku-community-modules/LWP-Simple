@@ -17,6 +17,6 @@ my $html = LWP::Simple.get('http://rakudo.org');
 
 ok(
     $html.match('Perl 6') &&
-        $html.match('</html>') && $html.chars > 12_000,
+        $html.match('</html>') && $html.chars > 2_800,
     'make sure we pulled whole document without, we believe, sizing from server'
 );
