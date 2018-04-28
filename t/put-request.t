@@ -18,9 +18,8 @@ my %headers =
 ;
 
 my $file = 'url.json'.IO.e ?? 'url.json' !! 't/url.json';
-
 my $url = (from-json $file.IO.slurp)<url>;
-say $url;
+
 my $html = LWP::Simple.put($url ~ '/put', %headers);
 my %json = from-json $html;
 
