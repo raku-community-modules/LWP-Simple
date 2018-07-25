@@ -9,6 +9,6 @@
         "LWP::Simple" : "lib/LWP/Simple.pm"
     },
     "author"       : "Cosimo Streppone",
-    "authority"    : "perl6",
+    "auth"         : "github:perl6",
     "source-url"   : "https://github.com/perl6/perl6-lwp-simple.git"
 }
