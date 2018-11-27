@@ -1,5 +1,3 @@
-## At this point, it is recommended that you use [HTTP::UserAgent](https://github.com/sergot/http-useragent) instead.
-
 Perl6 LWP::Simple
 =================
 
@@ -26,3 +24,9 @@ Current status
 As of 2011-04-22, runs with all recent rakudo builds.
 It correctly follows redirects, but no infinite redirects
 detection yet.
+
+You can
+use [HTTP::UserAgent](https://github.com/sergot/http-useragent)
+instead, with more options. However, this module will do just fine in
+most cases. 
+
