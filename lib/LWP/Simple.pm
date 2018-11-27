@@ -327,7 +327,7 @@ method parse_response (Blob $resp) {
     if ($header_end_pos < $resp.bytes) {
         my @header_lines = $resp.subbuf(
             0, $header_end_pos
-        ).decode('ascii').split(/\r\n/);
+        ).decode('latin-1').split(/\r\n/);
         my Str $status_line = @header_lines.shift;
 
         for @header_lines {
