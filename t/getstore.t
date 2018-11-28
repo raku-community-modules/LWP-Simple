@@ -3,7 +3,7 @@ use Test;
 
 use LWP::Simple;
 
-plan 15;
+plan 10;
 
 if %*ENV<NO_NETWORK_TESTING> {
     diag "NO_NETWORK_TESTING was set";
@@ -21,8 +21,6 @@ if $! {
 }
 
 getstore-tests('https://www.opera.com', rx/Opera \s+ browser/);
-# Note: http://www.opera.com redirects to https
-getstore-tests('http://www.opera.com', rx/Opera \s+ browser/);
 
 sub getstore-tests($url, $rx) {
     my $fname = $*SPEC.catdir($*TMPDIR, "./tmp-getstore-$*PID");
