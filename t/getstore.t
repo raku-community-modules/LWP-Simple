@@ -20,6 +20,7 @@ if $! {
     exit 0;
 }
 
+# test getstore under https
 getstore-tests('https://www.opera.com', rx/Opera \s+ browser/);
 
 sub getstore-tests($url, $rx) {
