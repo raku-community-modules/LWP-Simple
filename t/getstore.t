@@ -21,7 +21,7 @@ if $! {
 }
 
 # test getstore under https
-getstore-tests('https://www.opera.com', rx/Opera \s+ browser/);
+getstore-tests('https://www.opera.com', rx/Opera \s Web \s Browser/);
 
 sub getstore-tests($url, $rx) {
     my $fname = $*SPEC.catdir($*TMPDIR, "./tmp-getstore-$*PID");
