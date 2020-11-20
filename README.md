@@ -1,15 +1,15 @@
-LWP::Simple for Perl 6
+LWP::Simple for Raku
 =================
 
 [![Build Status](https://travis-ci.org/perl6/perl6-lwp-simple.svg?branch=master)](https://travis-ci.org/perl6/perl6-lwp-simple)
 
-This is a quick & dirty implementation of a LWP::Simple clone for Rakudo Perl 6; it does both `GET` and `POST` requests.
+This is a quick & dirty implementation of a LWP::Simple clone for Raku; it does both `GET` and `POST` requests.
 
 Dependencies
 ============
 
 LWP::Simple depends on the modules MIME::Base64 and URI,
-which you can find at http://modules.perl6.org/. The tests depends
+which you can find at http://modules.raku.org/. The tests depends
 on [JSON::Tiny](https://github.com/moritz/json).
 
 Write:
@@ -26,10 +26,10 @@ if you want to work with `https` too.
 Synopsis
 ========
 
-```perl6
+```raku
 use LWP::Simple;
 
-my $content = LWP::Simple.get("https://perl6.org");
+my $content = LWP::Simple.get("https://raku.org");
 
 my $response = LWP::Simple.post("https://somewhere.topo.st", { so => True }
 ```
