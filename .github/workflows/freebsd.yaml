@@ -15,17 +15,16 @@ jobs:
       uses: vmactions/freebsd-vm@v0.1.0
       with:
         usesh: true
-        prepare: env ASSUME_ALWAYS_YES=YES pkg install gcc gmake openssl curl
+        prepare: pkg install -y gcc gmake openssl curl perl
         run: |
           mkdir ~/rakudo && cd $_
           curl -LJO https://rakudo.org/latest/rakudo/src
           tar -xvzf rakudo-*.tar.gz
           cd rakudo-*
-
           perl Configure.pl --backend=moar --gen-moar
           make install
-          echo "export PATH=$(pwd)/install/bin:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.bashrc
-          source ~/.bashrc
+          echo "export PATH=$(pwd)/install/bin:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.profile
+          . ~/.profile
           cd /tmp/ && git clone https://github.com/ugexe/zef.git && cd zef && raku -Ilib bin/zef install .
           # Actually test
           cd $GITHUB_WORKSPACE
