@@ -1,7 +1,6 @@
 LWP::Simple for Raku
 =================
 
-[![Build Status](https://travis-ci.org/perl6/perl6-lwp-simple.svg?branch=master)](https://travis-ci.org/perl6/perl6-lwp-simple)
 ![Test Windows and MacOS](https://github.com/raku-community-modules/LWP-Simple/workflows/Test%20Windows%20and%20MacOS/badge.svg)
 
 This is a quick & dirty implementation of a LWP::Simple clone for Raku; it does both `GET` and `POST` requests.
@@ -21,7 +20,7 @@ You'll have to
 install [IO::Socket::SSL](https://github.com/sergot/io-socket-ssl) via
 
     zef install IO::Socket::SSL
-    
+
 if you want to work with `https` too.
 
 Synopsis
@@ -53,10 +52,24 @@ Use the installed commands:
 
 Or
 
-     lwp-download.p6  https://docs.perl6.org 
-     
+     lwp-download.p6  https://docs.perl6.org
+
 If `ÌO::Socket::SSL` has been installed.
 
-    lwp-get.p6  https://perl6.org
-    
+    lwp-get.p6  https://raku.org
+
 will instead print to standard output.
+
+Known bugs
+==========
+
+According
+to
+[issues raised](https://github.com/raku-community-modules/LWP-Simple/issues/40),
+[in this repo](https://github.com/raku-community-modules/LWP-Simple/issues/28),
+there could be some issues with older versions of MacOSx. This issue
+does not affect the functionality of the module, but just the test
+script itself, so you can safely install with `--force`. Right now,
+it's working correctly (as far as tests go) with Windows, MacOSx and
+Linux.
+
