@@ -1,0 +1,31 @@
+name: Test on FreeBSD
+
+on: [push, pull_request]
+
+jobs:
+  testfreebsd:
+    runs-on: macos-latest
+    name: A job to run test FreeBSD
+    steps:
+    - uses: actions/checkout@v2
+    - name: Test in FreeBSD
+      id: test
+      uses: vmactions/freebsd-vm@v0.1.0
+      with:
+        usesh: true
+        prepare: pkg install gcc gmake openssl curl
+        run: |
+          mkdir ~/rakudo && cd $_
+          curl -LJO https://rakudo.org/latest/rakudo/src
+          tar -xvzf rakudo-*.tar.gz
+          cd rakudo-*
+
+          perl Configure.pl --backend=moar --gen-moar
+          make install
+          echo "export PATH=$(pwd)/install/bin:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.bashrc
+          source ~/.bashrc
+          cd /tmp/ && git clone https://github.com/ugexe/zef.git && cd zef && raku -Ilib bin/zef install .
+          # Actually test
+          cd $GITHUB_WORKSPACE
+          zef install --deps-only .
+          zef test . --verbose
