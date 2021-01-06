@@ -19,8 +19,8 @@ jobs:
         run: |
           mkdir ~/rakudo && cd $_
           curl -LJO https://rakudo.org/latest/rakudo/src
-          tar -xvzf rakudo-*.tar.gz
-          cd rakudo-*
+          tar -xvzf -C rakudo-latest --strip-components=1 rakudo-*.tar.gz
+          cd rakudo-latest
           perl Configure.pl --backend=moar --gen-moar
           make install
           echo "export PATH=$(pwd)/install/bin:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.profile
