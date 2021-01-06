@@ -2,6 +2,7 @@ LWP::Simple for Raku
 =================
 
 [![Build Status](https://travis-ci.org/perl6/perl6-lwp-simple.svg?branch=master)](https://travis-ci.org/perl6/perl6-lwp-simple)
+![Test Windows and MacOS](https://github.com/raku-community-modules/LWP-Simple/workflows/Test%20Windows%20and%20MacOS/badge.svg)
 
 This is a quick & dirty implementation of a LWP::Simple clone for Raku; it does both `GET` and `POST` requests.
 
@@ -15,7 +16,7 @@ on [JSON::Tiny](https://github.com/moritz/json).
 Write:
 
     zef install --deps-only .
-    
+
 You'll have to
 install [IO::Socket::SSL](https://github.com/sergot/io-socket-ssl) via
 
