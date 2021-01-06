@@ -17,10 +17,8 @@ jobs:
         usesh: true
         prepare: pkg install -y gcc gmake openssl curl perl5 git
         run: |
-          mkdir ~/rakudo && cd $_
-          curl -LJO https://rakudo.org/latest/rakudo/src
-          tar -xvzf -C rakudo-latest --strip-components=1 rakudo-*.tar.gz
-          cd rakudo-latest
+          git clone https://github.com/rakudo/rakudo.git
+          cd rakudo
           perl Configure.pl --backend=moar --gen-moar
           make install
           echo "export PATH=$(pwd)/install/bin:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.profile
