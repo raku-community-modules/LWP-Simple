@@ -2,3 +2,6 @@ Makefile
 *.pir
 blib
 .precomp
+
+# emacs backup
+*~
