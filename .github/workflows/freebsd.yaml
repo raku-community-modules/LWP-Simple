@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   testfreebsd:
     runs-on: macos-latest
-    name: A job to run test FreeBSD
+    name: A job to run tests in FreeBSD
     env:
       ASSUME_ALWAYS_YES: yes
     steps:
@@ -15,7 +15,7 @@ jobs:
       uses: vmactions/freebsd-vm@v0.1.0
       with:
         usesh: true
-        prepare: pkg install gcc gmake openssl curl
+        prepare: pkg install -y gcc gmake openssl curl
         run: |
           mkdir ~/rakudo && cd $_
           curl -LJO https://rakudo.org/latest/rakudo/src
