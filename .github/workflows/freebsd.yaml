@@ -20,7 +20,7 @@ jobs:
           git clone https://github.com/rakudo/rakudo.git
           cd rakudo
           perl Configure.pl --backend=moar --gen-moar --gen-nqp
-          make install
+          /usr/local/bin/gmake install
           echo "export PATH=$(pwd)/install/bin:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.profile
           . ~/.profile
           cd /tmp/ && git clone https://github.com/ugexe/zef.git && cd zef && raku -Ilib bin/zef install .
