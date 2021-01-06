@@ -6,6 +6,8 @@ jobs:
   testfreebsd:
     runs-on: macos-latest
     name: A job to run test FreeBSD
+    env:
+      ASSUME_ALWAYS_YES: yes
     steps:
     - uses: actions/checkout@v2
     - name: Test in FreeBSD
