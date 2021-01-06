@@ -1,5 +1,5 @@
 {
-    "perl"         : "6.*",
+    "perl"         : "6.c",
     "name"         : "LWP::Simple",
     "version"      : "0.106",
     "description"  : "LWP::Simple quick & dirty implementation for Raku",
@@ -8,7 +8,8 @@
     "provides"     : {
         "LWP::Simple" : "lib/LWP/Simple.pm"
     },
-    "author"       : "Raku team",
+    "license": "Artistic-2.0",
+    "authors"      : ["niner","Raku community modules team"],
     "auth"         : "github:raku-community-modules",
     "source-url"   : "https://github.com/raku-community-modules/LWP-Simple.git"
 }

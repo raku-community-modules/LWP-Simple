@@ -1,4 +1,4 @@
-name: "Test"
+name: "Test on Ubuntu"
 on: [ push, pull_request ]
 jobs:
   test:
@@ -12,4 +12,4 @@ jobs:
       - name: Install modules
         run: zef install --deps-only .
       - name: Test
-        run: zef test .
+        run: zef test . --verbose

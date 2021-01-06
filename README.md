@@ -73,3 +73,10 @@ script itself, so you can safely install with `--force`. Right now,
 it's working correctly (as far as tests go) with Windows, MacOSx and
 Linux.
 
+License
+=======
+
+This distribution is licensed under the terms of
+the
+[Artistic 2.0 license](https://www.perlfoundation.org/artistic-license-20.html#). You
+can find a [copy](LICENSE) in the repository itself.
