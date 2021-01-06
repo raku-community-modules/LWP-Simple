@@ -15,7 +15,7 @@ jobs:
       uses: vmactions/freebsd-vm@v0.1.0
       with:
         usesh: true
-        prepare: pkg install -y gcc gmake openssl curl perl
+        prepare: pkg install -y gcc gmake openssl curl perl5
         run: |
           mkdir ~/rakudo && cd $_
           curl -LJO https://rakudo.org/latest/rakudo/src
