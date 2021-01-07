@@ -15,17 +15,12 @@ jobs:
       uses: vmactions/freebsd-vm@v0.1.0
       with:
         usesh: true
-        prepare: pkg install -y gcc gmake openssl curl perl5 git
+        prepare: pkg install -y openssl
         run: |
-          git clone https://github.com/rakudo/rakudo.git
-          cd rakudo
-          perl Configure.pl --backend=moar --gen-moar --gen-nqp
-          /usr/local/bin/gmake install
-          echo "export PATH=$(pwd)/install/bin:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.profile
-          . ~/.profile
-          raku --version
-          cd /tmp/ && git clone https://github.com/ugexe/zef.git && cd zef && raku -Ilib bin/zef install .
-          # Actually test
+          # Download tyil's binary
+          wget https://dist.tyil.nl/tmp/rakudo-star-amd64-fbsd-23807a36a0815ff979e58bf7faeac5fb8dfdd0f5.tar.gz -O /tmp/rakudostar.tgz
+          cd /usr/
+          tar xvfz /tmp/rakudostar.tgz
           cd $GITHUB_WORKSPACE
           zef install --deps-only .
           zef test . --verbose
