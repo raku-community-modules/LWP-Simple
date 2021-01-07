@@ -1,7 +1,7 @@
 {
     "perl"         : "6.c",
     "name"         : "LWP::Simple",
-    "version"      : "0.106",
+    "version"      : "0.107",
     "description"  : "LWP::Simple quick & dirty implementation for Raku",
     "depends"      : [ "MIME::Base64", "URI" ],
     "test-depends" : [ "JSON::Tiny" ],
@@ -9,7 +9,7 @@
         "LWP::Simple" : "lib/LWP/Simple.pm"
     },
     "license": "Artistic-2.0",
-    "authors"      : ["niner","Raku community modules team"],
+    "authors"      : ["cosimo", "niner","Raku community modules team"],
     "auth"         : "github:raku-community-modules",
     "source-url"   : "https://github.com/raku-community-modules/LWP-Simple.git"
 }
