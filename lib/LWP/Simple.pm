@@ -61,7 +61,7 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
     my ($scheme, $hostname, $port, $path, $auth) = self.parse_url($url);
 
     %headers{'Connection'} = 'close';
-    %headers{'User-Agent'} //= "LWP::Simple/$VERSION Perl6/$*PERL.compiler.name()";
+    %headers{'User-Agent'} //= "LWP::Simple/$VERSION Raku/$*PERL.compiler.name()";
 
     if $auth {
         $hostname = $auth<host>;

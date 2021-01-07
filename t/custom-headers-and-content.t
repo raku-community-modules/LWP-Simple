@@ -13,13 +13,14 @@ if %*ENV<NO_NETWORK_TESTING> {
 
 my $host    = 'http://eu.httpbin.org/anything';
 my %headers = ( 'Content-Type' => 'application/json' );
-my $content = '{"method":"echo","params":["Hello from Perl6"],"id":1}';
+constant message = "Hello from Raku";
+my $content = '{"method":"echo","params":[' ~ message ~ '],"id":1}';
 my $html    = LWP::Simple.post($host, %headers, $content);
 
 say $html;
 if $html {
     ok(
-        $html.match('Hello from Perl6'),
+        $html.match(message),
         'call to JSON-RPC service using headers and content params'
     );
 }
