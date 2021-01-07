@@ -44,6 +44,10 @@ method put (Str $url, %headers = {}, Any $content?) {
     self.request_shell(RequestType::PUT, $url, %headers, $content)
 }
 
+method head (Str $url, %headers = {}) {
+    self.request_shell(RequestType::HEAD, $url, %headers )
+}
+
 method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
 
     return unless $url;
@@ -131,7 +135,11 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
                 $charset = $charset ?? $charset.Str !!
                     self ?? $.default_encoding !! $.class_default_encoding;
 
-                return $resp_content.decode($charset);
+                if ( $rt == RequestType::HEAD ) {
+                    return $resp_headers;
+                } else {
+                    return $resp_content.decode($charset);
+                }
             }
             else {
                 return $resp_content;
