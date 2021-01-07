@@ -17,7 +17,6 @@ constant message = "Hello from Raku";
 my $content = '{"method":"echo","params":[' ~ message ~ '],"id":1}';
 my $html    = LWP::Simple.post($host, %headers, $content);
 
-say $html;
 if $html {
     ok(
         $html.match(message),
