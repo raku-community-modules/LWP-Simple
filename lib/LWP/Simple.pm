@@ -6,8 +6,8 @@ use MIME::Base64;
 use URI;
 use URI::Escape;
 
-constant $VERSION = '0.107';
-unit class LWP::Simple:auth<perl6>:ver{$VERSION};
+unit class LWP::Simple:auth<perl6>:ver<0.107>;
+constant $VERSION = ::?CLASS.^ver;
 
 enum RequestType <GET POST PUT HEAD DELETE>;
 
