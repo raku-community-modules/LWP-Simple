@@ -43,27 +43,27 @@ method base64encode ($user, $pass) {
     return $encoded;
 }
 
-method get (Str $url, %headers = {}) {
-    self.request_shell(RequestType::GET, $url, %headers)
+method get (Str $url, %headers = {}, Bool :$exception ) {
+    self.request_shell(RequestType::GET, $url, %headers, :$exception )
 }
 
-method delete (Str $url, %headers = {}) {
-    self.request_shell(RequestType::DELETE, $url, %headers)
+method delete (Str $url, %headers = {}, Bool :$exception) {
+    self.request_shell(RequestType::DELETE, $url, %headers, :$exception )
 }
 
-method post (Str $url, %headers = {}, Any $content?) {
-    self.request_shell(RequestType::POST, $url, %headers, $content)
+method post (Str $url, %headers = {}, Any $content?, Bool :$exception ) {
+    self.request_shell(RequestType::POST, $url, %headers, $content, :$exception )
 }
 
-method put (Str $url, %headers = {}, Any $content?) {
-    self.request_shell(RequestType::PUT, $url, %headers, $content)
+method put (Str $url, %headers = {}, Any $content?, Bool :$exception ) {
+    self.request_shell(RequestType::PUT, $url, %headers, $content, :$exception )
 }
 
-method head (Str $url, %headers = {}) {
-    self.request_shell(RequestType::HEAD, $url, %headers )
+method head (Str $url, %headers = {}, Bool :$exception ) {
+    self.request_shell(RequestType::HEAD, $url, %headers, :$exception )
 }
 
-method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
+method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?, Bool :$exception ) {
 
     return unless $url;
     die "400 URL must be absolute <URL:$url>\n"
@@ -106,11 +106,16 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
     given $status {
 
         when / <[4..5]> <[0..9]> <[0..9]> / {
-            X::LWP::Simple::Response.new(
-                status => $status,
-                headers => $resp_headers,
-                content => self!decode-response( :$resp_headers, :$resp_content )
-            ).throw;
+            if $exception {
+                X::LWP::Simple::Response.new(
+                    status => $status,
+                    headers => $resp_headers,
+                    content => self!decode-response( :$resp_headers, :$resp_content )
+                ).throw;
+            }
+            else {
+                return Nil;
+            }
         }
 
         when / 30 <[12]> / {
@@ -364,14 +369,14 @@ method parse_response (Blob $resp) {
 
 }
 
-method getprint (Str $url) {
-    my $out = self.get($url);
+method getprint (Str $url, Bool :$exception ) {
+    my $out = self.get($url, :$exception);
     if $out ~~ Buf { $*OUT.write($out) } else { say $out }
 }
 
-method getstore (Str $url, Str $filename) {
+method getstore (Str $url, Str $filename, Bool :$exception ) {
     return unless defined $url;
-    $filename.IO.spurt: self.get($url) || return
+    $filename.IO.spurt: self.get($url, :$exception ) || return
 }
 
 method parse_url (Str $url) {

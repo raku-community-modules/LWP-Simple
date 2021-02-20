@@ -7,7 +7,7 @@ plan 1;
 
 # these tests will fail if this url stops returning 404 response
 throws-like {
-    LWP::Simple.get('http://www.example.com/404');
+    LWP::Simple.get('http://www.example.com/404', :exception );
 },
 X::LWP::Simple::Response,
 status => rx:i:s/404 Not Found/;
