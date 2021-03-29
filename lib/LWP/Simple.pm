@@ -9,6 +9,22 @@ use URI::Escape;
 unit class LWP::Simple:auth<perl6>:ver<0.107>;
 constant $VERSION = ::?CLASS.^ver;
 
+
+class X::LWP::Simple::Response is Exception {
+
+    has Str $.status is rw;
+    has Hash $.headers is rw;
+    has Str $.content is rw;
+
+    method Str() {
+        return ~self.status;
+    }
+
+    method gist() {
+        return self.Str;
+    }
+}
+
 enum RequestType <GET POST PUT HEAD DELETE>;
 
 has Str $.default_encoding = 'utf-8';
@@ -27,27 +43,27 @@ method base64encode ($user, $pass) {
     return $encoded;
 }
 
-method get (Str $url, %headers = {}) {
-    self.request_shell(RequestType::GET, $url, %headers)
+method get (Str $url, %headers = {}, Bool :$exception ) {
+    self.request_shell(RequestType::GET, $url, %headers, :$exception )
 }
 
-method delete (Str $url, %headers = {}) {
-    self.request_shell(RequestType::DELETE, $url, %headers)
+method delete (Str $url, %headers = {}, Bool :$exception) {
+    self.request_shell(RequestType::DELETE, $url, %headers, :$exception )
 }
 
-method post (Str $url, %headers = {}, Any $content?) {
-    self.request_shell(RequestType::POST, $url, %headers, $content)
+method post (Str $url, %headers = {}, Any $content?, Bool :$exception ) {
+    self.request_shell(RequestType::POST, $url, %headers, $content, :$exception )
 }
 
-method put (Str $url, %headers = {}, Any $content?) {
-    self.request_shell(RequestType::PUT, $url, %headers, $content)
+method put (Str $url, %headers = {}, Any $content?, Bool :$exception ) {
+    self.request_shell(RequestType::PUT, $url, %headers, $content, :$exception )
 }
 
-method head (Str $url, %headers = {}) {
-    self.request_shell(RequestType::HEAD, $url, %headers )
+method head (Str $url, %headers = {}, Bool :$exception ) {
+    self.request_shell(RequestType::HEAD, $url, %headers, :$exception )
 }
 
-method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
+method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?, Bool :$exception ) {
 
     return unless $url;
     die "400 URL must be absolute <URL:$url>\n"
@@ -87,17 +103,23 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
     my ($status, $resp_headers, $resp_content) =
         self.make_request($rt, $hostname, $port, $path, %headers, $content, :$ssl);
 
-    # HTML header names can be mixed case. To find the desired names, transform
-    # them into lowercase.
-    my %resp_header_lowercase;
-    for $resp_headers.keys -> $header_name {
-        %resp_header_lowercase{$header_name.lc} = $resp_headers{$header_name};
-    }
-
     given $status {
 
+        when / <[4..5]> <[0..9]> <[0..9]> / {
+            if $exception {
+                X::LWP::Simple::Response.new(
+                    status => $status,
+                    headers => $resp_headers,
+                    content => self!decode-response( :$resp_headers, :$resp_content )
+                ).throw;
+            }
+            else {
+                return Nil;
+            }
+        }
+
         when / 30 <[12]> / {
-            my $new_url = %resp_header_lowercase<location>;
+            my $new_url = $resp_headers.pairs.first( *.key.lc eq 'location' ).value;
             if ! $new_url {
                 die "Redirect $status without a new URL?";
             }
@@ -113,37 +135,11 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
         }
 
         when / 20 <[0..9]> / {
-
-            # should be fancier about charset decoding application - someday
-            if ($.force_encoding) {
-                return $resp_content.decode($.force_encoding);
+            if ( $rt == RequestType::HEAD ) {
+                return $resp_headers;
+            } else {
+                return self!decode-response( :$resp_headers, :$resp_content );
             }
-            elsif (not $.force_no_encode) && %resp_header_lowercase<content-type> &&
-                %resp_header_lowercase<content-type> ~~
-                    /   $<media-type>=[<-[/;]>+]
-                        [ <[/]> $<media-subtype>=[<-[;]>+] ]? /  &&
-                (   $<media-type> eq 'text' ||
-                    (   $<media-type> eq 'application' &&
-                        $<media-subtype> ~~ /[ ecma | java ]script | json/
-                    )
-                )
-            {
-                my $charset =
-                    (%resp_header_lowercase<content-type> ~~ /charset\=(<-[;]>*)/)[0];
-
-                $charset = $charset ?? $charset.Str !!
-                    self ?? $.default_encoding !! $.class_default_encoding;
-
-                if ( $rt == RequestType::HEAD ) {
-                    return $resp_headers;
-                } else {
-                    return $resp_content.decode($charset);
-                }
-            }
-            else {
-                return $resp_content;
-            }
-
         }
 
         # Response failed
@@ -152,6 +148,28 @@ method request_shell (RequestType $rt, Str $url, %headers = {}, Any $content?) {
         }
     }
 
+}
+
+method !decode-response( :$resp_headers, :$resp_content ) {
+    my %resp_header_lowercase = $resp_headers.kv.map( -> $k, $v { $k.lc => $v });
+    # should be fancier about charset decoding application - someday
+    if ($.force_encoding) {
+        return $resp_content.decode($.force_encoding);
+    }
+    elsif (not $.force_no_encode) && self!is-text(:%resp_header_lowercase) {
+        my $charset = (%resp_header_lowercase<content-type> ~~ /charset\=(<-[;]>*)/)[0];
+        $charset = $charset ?? $charset.Str !!  self ?? $.default_encoding !! $.class_default_encoding;
+        return $resp_content.decode($charset);
+    }
+    else {
+        return $resp_content;
+    }
+}
+
+method !is-text(:%resp_header_lowercase --> Bool) {
+    so ( %resp_header_lowercase<content-type> &&
+      %resp_header_lowercase<content-type> ~~ /   $<media-type>=[<-[/;]>+] [ <[/]> $<media-subtype>=[<-[;]>+] ]? /  &&
+      (   $<media-type> eq 'text' || (   $<media-type> eq 'application' && $<media-subtype> ~~ /[ ecma | java ]script | json/)) );
 }
 
 method parse_chunks(Blob $b is rw, $sock) {
@@ -351,14 +369,14 @@ method parse_response (Blob $resp) {
 
 }
 
-method getprint (Str $url) {
-    my $out = self.get($url);
+method getprint (Str $url, Bool :$exception ) {
+    my $out = self.get($url, :$exception);
     if $out ~~ Buf { $*OUT.write($out) } else { say $out }
 }
 
-method getstore (Str $url, Str $filename) {
+method getstore (Str $url, Str $filename, Bool :$exception ) {
     return unless defined $url;
-    $filename.IO.spurt: self.get($url) || return
+    $filename.IO.spurt: self.get($url, :$exception ) || return
 }
 
 method parse_url (Str $url) {
