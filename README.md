@@ -43,6 +43,8 @@ use [HTTP::UserAgent](https://github.com/sergot/http-useragent)
 instead, with more options. However, this module will do just fine in
 most cases. 
 
+The documentation of this module is incomplete. Contributions are appreciated.
+
 Use
 ===
 
