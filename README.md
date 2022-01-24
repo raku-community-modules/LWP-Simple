@@ -34,6 +34,21 @@ my $content = LWP::Simple.get("https://raku.org");
 my $response = LWP::Simple.post("https://somewhere.topo.st", { so => True }
 ```
 
+Methods
+=======
+
+## get ( $url, [ %headers = {},  Bool :$exception ] )
+
+Sends a GET request to the value of `$url`. Returns the content of the return
+request. Errors are ignored and will result in a `Nil` value unless
+`$exception` is set to `True`, in which case an `LWP::Simple::Response` object
+containing the status code and brief description of the error will be returned.
+
+Requests are make with a default user agent of `LWP::Simple/$VERSION
+Raku/$*PERL.compiler.name()` which may get blocked by some web servers. Try
+overriding the default user agent header by passing a user agent string to the
+`%headers` argument with something like `{ 'User-Agent' => 'Your User-Agent
+String' }` if you have trouble getting content back.
 
 Current status
 ==============
