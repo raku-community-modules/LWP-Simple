@@ -6,7 +6,7 @@
     "depends"      : [ "MIME::Base64", "URI" ],
     "test-depends" : [ "JSON::Tiny" ],
     "provides"     : {
-        "LWP::Simple" : "lib/LWP/Simple.pm"
+        "LWP::Simple" : "lib/LWP/Simple.rakumod"
     },
     "license": "Artistic-2.0",
     "authors"      : ["cosimo", "niner","Raku community modules team"],
