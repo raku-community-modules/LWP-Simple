@@ -6,7 +6,7 @@ use MIME::Base64;
 use URI;
 use URI::Escape;
 
-unit class LWP::Simple:auth<perl6>:ver<0.107>;
+unit class LWP::Simple:auth<perl6>:ver<0.108>;
 constant $VERSION = ::?CLASS.^ver;
 
 

@@ -17,7 +17,7 @@ if $! {
     exit 0;
 }
 
-my $html = LWP::Simple.get('http://jigsaw.w3.org/HTTP/300/301.html',
+my $html = LWP::Simple.get('https://jigsaw.w3.org/HTTP/300/301.html',
         :User-Agent("CameliaTestBrowser"));
 
 ok(
