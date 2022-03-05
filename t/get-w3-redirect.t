@@ -11,12 +11,15 @@ if %*ENV<NO_NETWORK_TESTING> {
     exit;
 }
 
-my $html = LWP::Simple.get('http://jigsaw.w3.org/HTTP/300/301.html');
+try require IO::Socket::SSL;
+if $! {
+    skip-rest("IO::Socket::SSL not available");
+    exit 0;
+}
+
+my $html = LWP::Simple.get('https://jigsaw.w3.org/HTTP/300/301.html');
 
 ok(
     $html.match('Redirect test page'),
     'Was redirected to w3 redirect test page'
 );
-
-#diag("Content\n" ~ $html);
-
