@@ -1,17 +1,11 @@
-name: "Test on Ubuntu"
+name: "Tests on source"
 on: [ push, pull_request ]
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: jjmerelo/raku-test-openssl:latest
-      options: --user root
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install modules
-        run: |
-          zef install IO::Socket::SSL
-          zef install --deps-only .
-      - name: Test
-        run: zef test . --verbose
+      - name: Test via install
+        uses: JJ/raku-test-action@v1
+
+
+
