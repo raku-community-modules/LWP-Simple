@@ -35,6 +35,7 @@ is(
 );
 
 $basic-auth-url ~~ s/^https/http/;
-my $html = LWP::Simple.get($basic-auth-url);
-ok($html.match('protected'), 'Got protected url');
+skip "#51 'www.software-path.com' not resolving";
+#my $html = LWP::Simple.get($basic-auth-url);
+# ok($html.match('protected'), 'Got protected url');
 
