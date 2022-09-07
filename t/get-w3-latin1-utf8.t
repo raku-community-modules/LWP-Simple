@@ -5,6 +5,12 @@ use LWP::Simple;
 
 plan 2;
 
+try require IO::Socket::SSL;
+if $! {
+    skip-rest("IO::Socket::SSL not available");
+    exit 0;
+}
+
 if %*ENV<NO_NETWORK_TESTING> {
     diag "NO_NETWORK_TESTING was set";
     skip-rest("NO_NETWORK_TESTING was set");
