@@ -65,15 +65,15 @@ Use
 
 Use the installed commands:
 
-     lwp-download.p6  http://eu.httpbin.org
+     lwp-download.raku  http://eu.httpbin.org
 
 Or
 
-     lwp-download.p6  https://docs.perl6.org
+     lwp-download.raku  https://docs.perl6.org
 
 If `ÌO::Socket::SSL` has been installed.
 
-    lwp-get.p6  https://raku.org
+    lwp-get.raku  https://raku.org
 
 will instead print to standard output.
 
