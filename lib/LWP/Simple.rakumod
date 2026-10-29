@@ -6,7 +6,7 @@ use MIME::Base64;
 use URI;
 use URI::Escape;
 
-unit class LWP::Simple:auth<zef:raku-community-modules>:ver<0.109>;
+unit class LWP::Simple:auth<zef:raku-community-modules>:ver<0.110>;
 constant $VERSION = ::?CLASS.^ver;
 
 

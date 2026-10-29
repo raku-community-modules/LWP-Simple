@@ -26,5 +26,5 @@
   "test-depends": [
     "JSON::Tiny"
   ],
-  "version": "0.109"
+  "version": "0.110"
 }

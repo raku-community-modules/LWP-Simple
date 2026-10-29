@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.110  2026-10-30T07:54:58+13:00
     - release with auth zef:raku-community-modules
     - fix t/head.t tests
 
