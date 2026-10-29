@@ -1,4 +1,6 @@
 {{$NEXT}}
+    - release with auth zef:raku-community-modules
+    - fix t/head.t tests
 
 0.109  2022-09-16T06:57:20+12:00
     * fix or disable some live tests #51
